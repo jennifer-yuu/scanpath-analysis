@@ -11,6 +11,9 @@ import pandas as pd
 import math
 from pandas import DataFrame
 import scipy
+from scipy import cluster
+from matplotlib import pyplot as plt
+from scipy.cluster.hierarchy import dendrogram
 
 # df is for file containing the numerical data; df2 is for a file containing data on native languages of test subjects.
 
@@ -274,3 +277,19 @@ for lang1 in ESL_IDs2:
                 for k in range(len(reader_sentence_tuples[0])):
                     sum += scasim(reader_sentence_tuples[i][k][:8], reader_sentence_tuples[j][k][:8], 512, 0.01, 1805, 1)
         ESL_scasim_matrix[ESL_IDs2.index(lang1)][ESL_IDs2.index(lang2)] = sum/(len(reader_sentence_tuples[0])*len(lang1)*len(lang2))
+ 
+# Create dendrogram of similarities, applying Ward clustering method.
+
+
+
+Y = scipy.cluster.hierarchy.ward(ESL_scasim_matrix)
+plt.figure(figsize=(25, 10))
+plt.title('TItle')
+plt.xlabel('sample index')
+plt.ylabel('distance')
+dendrogram(
+    Y,
+    leaf_rotation=90.,  # rotates the x axis labels
+    leaf_font_size=8.,  # font size for the x axis labels
+)
+plt.show()
